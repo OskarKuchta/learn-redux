@@ -1,13 +1,17 @@
 import React from "react";
 import CartItem from "./CartItems";
-import { clearCart } from "../features/cart/cartSlice";
+import { clearCart, resetChanges } from "../features/cart/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { openModal } from "../features/modal/modalSlice";
 const CartContainer = () => {
   const dispatch = useDispatch();
   const clearList = () => {
     dispatch(clearCart());
+    dispatch(openModal());
   };
- 
+  const reset = () => {
+    dispatch(resetChanges());
+  };
 
   const { cartItems, total, amount } = useSelector((store) => store.cart);
   if (amount < 1) {
@@ -17,6 +21,9 @@ const CartContainer = () => {
           <h2>Your bag is empty</h2>
           <h4 className="empty-cart"> is currently empty</h4>
         </header>
+        <button className="btn btn-reverse" onClick={reset}>
+          Reset changes
+        </button>
       </section>
     );
   }
@@ -34,7 +41,7 @@ const CartContainer = () => {
         <hr />
         <div className="cart-total">
           <h4>
-            total <span>${total}</span>
+            total <span>${total.toFixed(2)}</span>
           </h4>
         </div>
         <button className="btn clear-btn" onClick={clearList}>
