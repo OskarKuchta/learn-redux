@@ -1,13 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import cartItems from "../../cartItems";
+import axios from "axios";
+const url = "https://course-api.com/react-useReducer-cart-project";
 
-const getPersistedState = () => {
-  const persistedCartData = localStorage.getItem("cartData");
-  return persistedCartData ? JSON.parse(persistedCartData) : initialState;
-};
-
+export const getCartItems = createAsyncThunk(
+  "cart/getCartItems",
+  async (_, thunkAPI) => {
+    try {
+      const resp = await axios(url);
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue("There was an error...");
+    }
+  }
+);
 const initialState = {
-  cartItems: cartItems,
+  cartItems: [],
   amount: 4,
   total: 0,
   isLoading: true,
@@ -15,30 +23,22 @@ const initialState = {
 
 const cartSlice = createSlice({
   name: "cart",
-  initialState: getPersistedState() || initialState,
+  initialState: initialState,
   reducers: {
     clearCart: (state) => {
-      localStorage.setItem(
-        "cartData",
-        JSON.stringify({ ...state, cartItems: [], amount: 0 })
-      );
-
       return { ...state, cartItems: [], amount: 0 };
     },
     removeItem: (state, action) => {
       const itemId = action.payload;
       state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
-      localStorage.setItem("cartData", JSON.stringify(state));
     },
     increase: (state, { payload }) => {
       const cartItem = state.cartItems.find((item) => item.id === payload.id);
       cartItem.amount = cartItem.amount + 1;
-      localStorage.setItem("cartData", JSON.stringify(state));
     },
     decrease: (state, { payload }) => {
       const cartItem = state.cartItems.find((item) => item.id === payload.id);
       cartItem.amount = cartItem.amount - 1;
-      localStorage.setItem("cartData", JSON.stringify(state));
     },
     calculateTotal: (state) => {
       let amount = 0;
@@ -48,12 +48,25 @@ const cartSlice = createSlice({
         total += item.amount * item.price;
       });
       state.amount = amount;
-      state.total = total;
-      localStorage.setItem("cartData", JSON.stringify(state));
+      state.total = total.toFixed(2);
     },
     resetChanges: (state) => {
       return { ...state, cartItems: cartItems };
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getCartItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getCartItems.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.cartItems = action.payload;
+      })
+      .addCase(getCartItems.rejected, (state, action) => {
+        console.log(action.payload);
+        state.isLoading = false;
+      });
   },
 });
 export const {

@@ -1,12 +1,11 @@
 import React from "react";
 import CartItem from "./CartItems";
-import { clearCart, resetChanges } from "../features/cart/cartSlice";
+import { resetChanges } from "../features/cart/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { openModal } from "../features/modal/modalSlice";
 const CartContainer = () => {
   const dispatch = useDispatch();
-  const clearList = () => {
-    dispatch(clearCart());
+  const modal = () => {
     dispatch(openModal());
   };
   const reset = () => {
@@ -41,10 +40,10 @@ const CartContainer = () => {
         <hr />
         <div className="cart-total">
           <h4>
-            total <span>${total.toFixed(2)}</span>
+            total <span>${total}</span>
           </h4>
         </div>
-        <button className="btn clear-btn" onClick={clearList}>
+        <button className="btn clear-btn" onClick={modal}>
           Clear cart
         </button>
       </footer>
