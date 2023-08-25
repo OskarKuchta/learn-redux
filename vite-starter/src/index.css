@@ -313,3 +313,21 @@ hr {
 .btn-reverse {
   margin-top: 2rem;
 }
+.not-exist {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.not-exist h1 {
+  font-size: 2rem;
+}
+.not-exist button {
+  margin-top: 2rem;
+  padding: 0.5rem 4rem;
+}
+
+.not-exist a {
+  color: black;
+}
