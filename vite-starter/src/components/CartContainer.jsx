@@ -1,6 +1,5 @@
 import React from "react";
 import CartItem from "./CartItems";
-import { resetChanges } from "../features/cart/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { openModal } from "../features/modal/modalSlice";
 const CartContainer = () => {
@@ -8,11 +7,9 @@ const CartContainer = () => {
   const modal = () => {
     dispatch(openModal());
   };
-  const reset = () => {
-    dispatch(resetChanges());
-  };
 
   const { cartItems, total, amount } = useSelector((store) => store.cart);
+  const filteredCartItems = cartItems.filter((item) => item.amount > 1);
   if (amount < 1) {
     return (
       <section className="cart">
@@ -20,9 +17,9 @@ const CartContainer = () => {
           <h2>Your bag is empty</h2>
           <h4 className="empty-cart"> is currently empty</h4>
         </header>
-        <button className="btn btn-reverse" onClick={reset}>
-          Reset changes
-        </button>
+        <a href="/">
+          <button className="btn btn-reverse">Back to main page</button>
+        </a>
       </section>
     );
   }
@@ -31,11 +28,13 @@ const CartContainer = () => {
       <header>
         <h2>Your bag</h2>
       </header>
+
       <div>
-        {cartItems.map((item) => {
-          return <CartItem key={item.id} {...item} />;
-        })}
+        {filteredCartItems.map((item) => (
+          <CartItem key={item.id} {...item} />
+        ))}
       </div>
+
       <footer>
         <hr />
         <div className="cart-total">
