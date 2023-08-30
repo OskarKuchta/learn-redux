@@ -1,13 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import cartItems from "../../cartItems";
 
-const saveStateToLocalStorage = (state) => {
-  localStorage.setItem("cartState", JSON.stringify(state));
-};
 
-const initialState = JSON.parse(localStorage.getItem("cartState")) || {
+const initialState =  {
   cartItems: cartItems,
-  amount: 0,
+  amount: 4,
   total: 0,
   isLoading: true,
 };
@@ -51,8 +48,5 @@ export const {
   calculateTotal,
 } = cartSlice.actions;
 
-export default (state, action) => {
-  const newState = cartSlice.reducer(state, action);
-  saveStateToLocalStorage(newState);
-  return newState;
-};
+export default cartSlice.reducer;
+

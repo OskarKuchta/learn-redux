@@ -310,9 +310,7 @@ hr {
   display: flex;
   justify-content: space-around;
 }
-.btn-reverse {
-  margin-top: 2rem;
-}
+
 .not-exist {
   height: 80vh;
   display: flex;
@@ -330,4 +328,10 @@ hr {
 
 .not-exist a {
   color: black;
+}
+section a {
+  margin-top: 2rem;
+}
+.btn-toCart {
+  padding: 0.2rem 0.6rem;
 }
